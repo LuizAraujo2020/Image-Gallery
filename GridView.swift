@@ -1,12 +1,44 @@
 import SwiftUI
 
 struct GridView: View {
+    @EnvironmentObject var dataModel: DataModel
+    
+    private static let initialColumns = 3
+    @State private var isAddingPhoto = false
+    @State private var isEditing = false
+    
+    @State private var gridColumns = Array(repeating: GridItem(.flexible()), count: initialColumns)
+    @State private var numColumns = initialColumns
+    
+    private var columnsTitle: String {
+        gridColumns.count > 1 ? "\(gridColumns.count) Columns" : "1 Column"
+    }
+    
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            if isEditing {
+                ColumnStepper(title: columnsTitle, range: 1...8, columns: $gridColumns)
+            }
+            
+            ScrollView {
+                LazyVGrid(columns: gridColumns) {
+                    ForEach(dataModel.items) { item in
+                        GeometryReader { geo in
+                            NavigationLink(destination: DetailView(item: item)) {
+                                GridItemView(size: geo.size.width, item: item)
+                            }
+                        }
+                        .cornerRadius(8.0)
+                        .aspectRatio(1, contentMode: .fit)
+                        .overlay(alignment: .topTrailing) {
+                            if isEditing {
+                                
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
