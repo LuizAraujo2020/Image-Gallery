@@ -38,3 +38,11 @@ class DataModel: ObservableObject {
         }
     }
 }
+
+extension URL {
+    /// Indicates whether the URL has a file extension corresponding to a common image format.
+    var isImage: Bool {
+        let imageExtensions = ["jpg", "jpeg", "png", "gif", "heic"]
+        return imageExtensions.contains(self.pathExtension)
+    }
+}
